@@ -17,6 +17,7 @@ const App: React.FC<AppProps> = ({ appId }) => {
         setHasLoaded(false);
         const result = await new AppsClient().getAppDetail(appId);
         setAppDetail(result);
+
         setHasLoaded(true);
       } catch (error) {}
     };
@@ -28,7 +29,7 @@ const App: React.FC<AppProps> = ({ appId }) => {
   if (!hasLoaded) {
     return <>Loading</>;
   } else if (!appDetail) {
-    return <>App not found found</>;
+    return <>App not found</>;
   }
 
   return <>App found with id '{appDetail.appId}'</>;

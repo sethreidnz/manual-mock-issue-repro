@@ -1,4 +1,34 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Jest manual mocking of named class export
+
+This repository shows an example of trying to manually mock a class that is a named export of module. The issue it is trying to show is that it doesn't seem to work to try to spy on one of the mocked methods in the same way as described [here](https://jestjs.io/docs/en/es6-class-mocks#spying-on-methods-of-our-class).
+
+## Reproducing the issue
+
+To see the issue you will need to clone the repo and install the packages:
+
+```
+git clone https://github.com/sethreidnz/manual-mock-issue-repro.git
+cd manual-mock-issue-repro
+npm install
+```
+
+Then you can run the tests:
+
+```
+npm run test
+```
+
+Notice that the tests fail on the following. Even though that is importing the mock as described [here](https://jestjs.io/docs/en/es6-class-mocks#spying-on-methods-of-our-class).
+
+```
+expect(jest.fn()).toHaveBeenCalledTimes(expected)
+```
+
+Perhaps there is something wrong in how I am doing this but it appears to me that the class is not using the same instance of the function as I am importing from the `api/__mocks__/clients.ts` file but I'm not sure why.
+
+### Further thoughts
+
+I have actually used this exact same method to do the same thing but with a module in `node_modules` but placing a `__mocks__` folder with a module of the same name, exporting the function and doing it exactly the same. But in that case it was not a class that was being 'newed' up and that leads me to think that might be the reason. Perhaps there is a way for me to get around this?
 
 ## Available Scripts
 

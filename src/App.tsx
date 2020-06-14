@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import { AppsClient, AppDetailDto } from "./api/clients";
+
+type AppProps = {
+  appId: string;
+};
+
+const App: React.FC<AppProps> = ({ appId }) => {
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [appDetail, setAppDetail] = useState<AppDetailDto | null>(null);
+
+  useEffect(() => {
+    const getAppDetail = async (appId: string) => {
+      try {
+        setHasLoaded(false);
+        const result = await new AppsClient().getAppDetail(appId);
+        setAppDetail(result);
+        setHasLoaded(true);
+      } catch (error) {}
+    };
+    if (!hasLoaded) {
+      getAppDetail(appId);
+    }
+  }, [appId, hasLoaded]);
+
+  if (!hasLoaded) {
+    return <>Loading</>;
+  } else if (!appDetail) {
+    return <>App not found found</>;
+  }
+
+  return <>App found with id '{appDetail.appId}'</>;
+};
 
 export default App;
